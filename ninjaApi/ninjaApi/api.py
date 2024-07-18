@@ -1,5 +1,5 @@
 from ninja import NinjaAPI
-from ninjaApi.backendApi.utils.backend_auth import SupabaseTokenAuthentication
+from backendApi.utils.backend_auth import SupabaseTokenAuthentication
 from user.api import router as users_router
 from backendApi.api import router as backend_router
 
