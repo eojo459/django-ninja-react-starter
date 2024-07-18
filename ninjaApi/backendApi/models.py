@@ -82,7 +82,7 @@ class NotificationMessageType(models.Model):
     id = models.AutoField(primary_key=True, editable=False, unique=True)
     name = models.CharField(max_length=20)
 
-class EmailTokenVerify(models.Model):
+class OtpTokenVerify(models.Model):
     id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False, unique=True)
     token = models.CharField(max_length=255)
     user_uid = models.ForeignKey('user.User', to_field='uid', on_delete=models.CASCADE, null=True, blank=True)
