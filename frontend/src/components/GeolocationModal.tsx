@@ -1,11 +1,7 @@
 import { Avatar, Badge, Button, Grid, Group, Loader, Modal, Stack, Table, Text, Title } from '@mantine/core';
 import { useEffect, useRef, useState } from 'react';
-import { GetUserInfoByUid, getUserById } from '../helpers/Api';
 import { useAuth } from '../authentication/SupabaseAuthContext';
-import { ProfileHeader } from './ProfileHeader';
-import { UserProfileModel } from '../pages/main/AppHome';
 import classes from "../css/UserProfileModal.module.css";
-import { TimesheetDataReview } from '../pages/staff-dashboard/timesheet';
 import TileLayer from 'ol/layer/Tile';
 import { Collection, Feature, Map as OLMap, Overlay, View } from 'ol';
 import { OSM } from 'ol/source';
@@ -43,7 +39,6 @@ interface MapOptions {
 
 export default function GeolocationModal(props: GeolocationModal) {
     const { user, session } = useAuth(); 
-    const [ userData, setUserData ] = useState<UserProfileModel | null>(null);
     const [ loading, setLoading ] = useState(true);
     const [refreshCount, setRefreshCount] = useState(0);
     const [destinationLon, setDesinationLon] = useState(''); // TODO: SET THE LONGITUDE COORDINATES

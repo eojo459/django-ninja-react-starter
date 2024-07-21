@@ -1,15 +1,11 @@
 import { Tabs, Title, Text, Stack, Grid, Select, Button, Checkbox } from "@mantine/core";
-import StaffSubmittedTimesheets from "../pages/owner-dashboard/components/StaffSubmittedTimesheets";
-import UserSubmittedTimesheets from "../pages/owner-dashboard/components/UserSubmittedTimesheets";
-import { IndustryData, reportTypeData, reportingFrequencyData } from "../helpers/SelectData";
 import classes from "../../../css/TextInput.module.css";
 import { DatePickerInput } from "@mantine/dates";
 import { useState } from "react";
-import { ReportInfo } from "../pages/owner-dashboard/ReportInbox";
 import { formatDate } from "../helpers/Helpers";
 
 interface GenerateReport {
-    handleGenerate: (reportInfo: ReportInfo) => void;
+    handleGenerate: (reportInfo: any) => void;
 }
 
 export default function GenerateReport(props: GenerateReport) {
@@ -56,7 +52,7 @@ export default function GenerateReport(props: GenerateReport) {
                         size="lg"
                         maw={500}
                         classNames={classes}
-                        data={reportTypeData}
+                        data={[]}
                         //{...form.getInputProps('business_info.industry')}
                     >
                     </Select>

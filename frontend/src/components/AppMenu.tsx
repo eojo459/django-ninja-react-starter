@@ -20,7 +20,6 @@ import {
     IconFileDescription,
 } from '@tabler/icons-react';
 import classes from "../css/AppMenu.module.css";
-import vsLogo from '../assets/VerifiedHoursLogo2.png';
 import { useMediaQuery } from '@mantine/hooks';
 import { useNavigationContext } from '../context/NavigationContext';
 import { useAuth } from '../authentication/SupabaseAuthContext';
@@ -114,7 +113,7 @@ export function AppMenu() {
                     {/* <Text size="30px" fw={900} style={{letterSpacing:"1px"}}>Welcome to VerifiedShift! 👋</Text> */}
                     <Image
                         radius="md"
-                        src={vsLogo}
+                        //src={vsLogo}
                     //h={30}
                     />
                     {/* <Text size="24px" fw={900} ta="center" mb="lg">Please sign-in to start the adventure 🚀</Text> */}

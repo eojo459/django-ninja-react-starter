@@ -1,14 +1,7 @@
 import { Container, Stack, Title, Text, Box, Group, Switch, Grid, Button, rem, useMantineTheme, Select } from "@mantine/core";
-import { IconCheck, IconX } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
-import classes from "../../../../css/TextInput.module.css";
 import { useAuth } from "../authentication/SupabaseAuthContext";
-import { GetQrcodeInviteLink, PostQrcodeInviteLink } from "../helpers/Api";
-import { notifications } from "@mantine/notifications";
-import notiicationClasses from "../../../../css/Notifications.module.css";
-import { supabase } from "../authentication/SupabaseContext";
 import { GenerateUUID } from "../helpers/Helpers";
-import { supabaseUrl } from "../pages/owner-dashboard/business/Business-Management";
 import { useMediaQuery } from "@mantine/hooks";
 
 interface CentreInviteCode {

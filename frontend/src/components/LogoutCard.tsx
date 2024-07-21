@@ -7,11 +7,7 @@ import { useNavigationContext } from "../context/NavigationContext";
 export default function LogoutCard() {
     const { setUser } = useAuth();
     const {
-        profilePanelActive, clockInPanelActive, settingsPanelActive, groupsPanelActive,
-        timesheetsPanelActive, registrationPanelActive, homePanelActive, managementPanelActive,
-        inboxPanelActive, attendancePanelActive, setProfilePanelActive, setClockInPanelActive,
-        setSettingsPanelActive, setGroupsPanelActive, setRegistrationPanelActive, setHomePanelActive,
-        setManagementPanelActive, setInboxPanelActive, setTimesheetsPanelActive, setAttendancePanelActive
+        profilePanelActive, settingsPanelActive, setProfilePanelActive,setSettingsPanelActive,
     } = useNavigationContext();
 
     useEffect(() => {
@@ -19,15 +15,7 @@ export default function LogoutCard() {
         setUser(null);
         localStorage.clear();
         setProfilePanelActive(false);
-        setClockInPanelActive(false);
         setSettingsPanelActive(false);
-        setGroupsPanelActive(false);
-        setTimesheetsPanelActive(false);
-        setRegistrationPanelActive(false);
-        setHomePanelActive(false);
-        setManagementPanelActive(false);
-        setInboxPanelActive(false);
-        setAttendancePanelActive(false);
     },[]);
 
     return (

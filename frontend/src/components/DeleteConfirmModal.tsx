@@ -1,10 +1,6 @@
 import { Avatar, Badge, Button, Grid, Group, Loader, Modal, Stack, Table, Text, Title } from '@mantine/core';
 import { useEffect, useState } from 'react';
-import { GetUserInfoByUid, getUserById } from '../helpers/Api';
 import { useAuth } from '../authentication/SupabaseAuthContext';
-import { ProfileHeader } from './ProfileHeader';
-import { UserProfileModel } from '../pages/main/AppHome';
-import { ProfilePanel } from './ProfilePanel';
 import classes from "../css/UserProfileModal.module.css";
 //import { getStatusColor } from '../../../helpers/Helpers';
 
@@ -18,7 +14,6 @@ interface DeleteConfirmModal {
 
 export default function DeleteConfirmModal(props: DeleteConfirmModal) {
     const { user, session } = useAuth(); 
-    const [ userData, setUserData ] = useState<UserProfileModel | null>(null);
     const [ loading, setLoading ] = useState(false);
     
     // setup props

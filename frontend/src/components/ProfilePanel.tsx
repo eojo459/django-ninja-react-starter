@@ -4,9 +4,9 @@ import { UserProfileModel } from "../pages/main/AppHome";
 import ProfileEditModal from "./ProfileEditModal";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { useEffect, useState } from "react";
-import { GetStaffActivityLogsByUid, getUserById } from "../helpers/Api";
+import { getUserByUid } from "../helpers/Api";
 import { useAuth } from "../authentication/SupabaseAuthContext";
-import { dateToWords, sortTimestampsNewest } from "../helpers/Helpers";
+import { dateToWords } from "../helpers/Helpers";
 
 interface IProfilePanel {
     user: UserProfileModel;
@@ -60,7 +60,7 @@ export function ProfilePanel(props: IProfilePanel) {
     async function handleFormSubmitted(flag: boolean) {
         if (flag) {
             // get new updated data from database
-            var userData = await getUserById(userProp.uid, session?.access_token);
+            var userData = await getUserByUid(userProp.uid, session?.access_token);
             setUserData(userData);
             handleDataChange(true);
         }

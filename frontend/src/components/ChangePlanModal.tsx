@@ -1,9 +1,7 @@
 import { Accordion, Avatar, Badge, Button, Grid, Group, Loader, Modal, Space, Stack, Table, Text, Title, rem } from '@mantine/core';
 import { useEffect, useState } from 'react';
-import { CancelChargebeeSubscription, GetUserInfoByUid, PostChargebeeNewCheckoutUrl, getUserById } from '../helpers/Api';
+import { CancelChargebeeSubscription, PostChargebeeNewCheckoutUrl, getUserByUid } from '../helpers/Api';
 import { useAuth } from '../authentication/SupabaseAuthContext';
-import { ProfileHeader } from './ProfileHeader';
-import { UserProfileModel } from '../pages/main/AppHome';
 import classes from "../css/UserProfileModal.module.css";
 import { GenerateUUID } from '../helpers/Helpers';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';

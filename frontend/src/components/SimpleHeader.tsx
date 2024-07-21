@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { Container, Group, Burger, Image, Menu, Avatar, rem, Text, Button, Title, SimpleGrid, Grid, Drawer, Stack, Indicator } from '@mantine/core';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import classes from '../css/SimpleHeader.module.css';
-import myImage from '../assets/VerifiedHoursLogo-Shield.png';
-import myImageV2 from '../assets/VerifiedHoursLogo2.png';
+//import myImage from '../assets/VerifiedHoursLogo-Shield.png';
+//import myImageV2 from '../assets/VerifiedHoursLogo2.png';
 import { useNavigationContext } from "../context/NavigationContext";
 import { IconUser, IconSettings, IconLogout, IconChevronRight } from '@tabler/icons-react';
 import { useAuth } from '../authentication/SupabaseAuthContext';
@@ -107,7 +107,7 @@ export function SimpleHeader() {
                     <>
                         <Image
                             radius="md"
-                            src={myImage}
+                            //src={myImage}
                             h={70}
                             style={{ cursor: 'pointer' }}
                             onClick={() => navigate("/")}
@@ -146,7 +146,7 @@ export function SimpleHeader() {
                                     <Drawer.Title>
                                         <Image
                                             radius="md"
-                                            src={myImageV2}
+                                            //src={myImageV2}
                                             h={100}
                                             w="auto"
                                             fit="contain"
@@ -176,7 +176,7 @@ export function SimpleHeader() {
                         <Burger color="#336E1E" opened={burgerDrawerOpened} onClick={toggleBurgerDrawer} hiddenFrom="lg" size="xl" />
                         <Image
                             radius="md"
-                            src={myImage}
+                            //src={myImage}
                             h={100}
                             style={{ cursor: 'pointer' }}
                             onClick={() => {

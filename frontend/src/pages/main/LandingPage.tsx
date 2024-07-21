@@ -8,8 +8,6 @@ import PlansPricing from "../../components/PlansPricing";
 import { useAuth } from "../../authentication/SupabaseAuthContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import heroScreens from '../../assets/verifiedshift-screens.png';
-import vsLogo from '../../assets/VerifiedHoursLogo2.png';
 import { useMediaQuery } from "@mantine/hooks";
 
 
@@ -37,7 +35,7 @@ export default function LandingPage() {
                     <Grid.Col span={{ base: 12, md: 8 }} mb="xl">
                         <Image
                             radius="md"
-                            src={vsLogo}
+                            //src={vsLogo}
                             //h={30}
                         />
                     </Grid.Col>
@@ -80,7 +78,7 @@ export default function LandingPage() {
                             //h={200}
                             w="fit"
                             fit="contain"
-                            src={heroScreens}
+                            //src={heroScreens}
                             mt="50px"
                         />
                     </Grid.Col>

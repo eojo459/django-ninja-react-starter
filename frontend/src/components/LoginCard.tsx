@@ -3,7 +3,6 @@ import classes from '../css/TextInput.module.css';
 import { useEffect, useState } from "react";
 import { useForm } from "@mantine/form";
 import { useNavigate } from "react-router-dom";
-import vsLogo from '../assets/VerifiedHoursLogo2.png';
 import { notifications } from "@mantine/notifications";
 import notiicationClasses from "../css/Notifications.module.css";
 import { IconCheck, IconX } from "@tabler/icons-react";
@@ -141,7 +140,7 @@ export default function LoginCard(props: LoginCard) {
                     {/* <Text size="30px" fw={900} style={{letterSpacing:"1px"}}>Welcome to VerifiedShift! 👋</Text> */}
                     <Image
                         radius="md"
-                        src={vsLogo}
+                        //src={vsLogo}
                         //h={30}
                     />
                     <Text size="24px" fw={900} ta="center" mb="lg">Please sign-in to start the adventure 🚀</Text>

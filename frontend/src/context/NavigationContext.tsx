@@ -2,7 +2,6 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useAuth } from '../authentication/SupabaseAuthContext';
 import { userLinks } from '../components/SimpleHeader';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
-import { GetStaffNotificationMessages } from '../helpers/Api';
 import { useSupabase } from '../authentication/SupabaseContext';
 
 // Define the type for the context
@@ -17,7 +16,6 @@ type NavigationContextType = {
     setProfilePanelActive: React.Dispatch<React.SetStateAction<boolean>>;
     setSettingsPanelActive: React.Dispatch<React.SetStateAction<boolean>>;
     setNotificationMessages: React.Dispatch<React.SetStateAction<boolean>>;
-    getNotifications: () => void;
 };
 
 // Create the context
@@ -32,7 +30,6 @@ const NavigationContext = createContext<NavigationContextType>({
     setProfilePanelActive: () => { },
     setSettingsPanelActive: () => { },
     setNotificationMessages: () => {},
-    getNotifications: () => {},
 });
 
 // Create a provider component
@@ -84,9 +81,6 @@ export const NavigationProvider = ({ children }: any) => {
             default:
                 break;
         }
-
-        // get notifications
-        getNotifications();
     }, [active]);
 
     function checkUrl() {
@@ -94,17 +88,6 @@ export const NavigationProvider = ({ children }: any) => {
         const path = myUrl.pathname;
         console.log(path);
         return path.split('/')[1];
-    }
-
-    async function getNotifications() {
-        if (user) {
-            var notifications = await GetStaffNotificationMessages(user?.uid, session?.access_token);
-            if (notifications?.length > 0) {
-                setNotificationMessages(true);
-                return true;
-            }
-        }
-        return false;
     }
 
     // Provide the context value
@@ -119,7 +102,6 @@ export const NavigationProvider = ({ children }: any) => {
         setProfilePanelActive,
         setSettingsPanelActive,
         setNotificationMessages: setNotificationMessages,
-        getNotifications,
     };
 
     return (

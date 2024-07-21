@@ -1,10 +1,10 @@
 import { AuthSession, createClient } from '@supabase/supabase-js'
 import LogoutCard from '../components/LogoutCard';
 import { Navigate, NavigateFunction, useNavigate } from 'react-router-dom';
-import { CheckUsers, GetAuthUserEmailByUsername, GetBusinessInfoForUserByUid, GetOwnerPayment, GetOwnerSubscription, GetOwnerWorkingHours, GetStaffRelationshipByBusinessId, GetStaffWorkingHours, PostChild, PostOwner, PostParent, PostStaff, PostUser, getBusinessProfilePlanById, getStaffLimitStatus, getUserById } from '../helpers/Api';
+import { CheckUsers, GetAuthUserEmailByUsername, GetOwnerPayment, GetOwnerSubscription, getUserByUid, PostNewUser } from '../helpers/Api';
 import { useAuth } from './SupabaseAuthContext';
 import { useNavigationContext } from '../context/NavigationContext';
-import { StaffWorkingHours, UserProfileModel, UserProfleBusinessInfo } from '../pages/main/AppHome';
+import { UserProfileModel } from '../pages/main/AppHome';
 import { createContext, useContext, useState } from 'react';
 import { notifications } from "@mantine/notifications";
 import notiicationClasses from "../css/Notifications.module.css";
@@ -165,7 +165,7 @@ export const SupabaseContextProvider = ({ children }: any) => {
                         'created_at': userData.created_at,
                         'position': form.position,
                     }
-                    await PostUser(staffUser, authData?.session?.access_token);
+                    await PostNewUser(staffUser, authData?.session?.access_token);
                 }
                 
                 // sign in user after signing up
@@ -252,7 +252,7 @@ export const SupabaseContextProvider = ({ children }: any) => {
                 if (authSession) {
                     
                     // get user info
-                    var userInfo = await getUserById(authSession?.user?.id, authSession?.access_token); 
+                    var userInfo = await getUserByUid(authSession?.user?.id, authSession?.access_token); 
 
                     if (!userInfo?.active) {
                         // if account is not active do not let them login, show error

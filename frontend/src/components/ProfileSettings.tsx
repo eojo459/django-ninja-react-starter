@@ -4,7 +4,7 @@ import { randomId, useDisclosure, useMediaQuery } from "@mantine/hooks";
 import classes from "../css/UserProfile.module.css";
 import { useEffect, useState } from "react";
 import { useAuth } from "../authentication/SupabaseAuthContext";
-import { EmailVerifyToken, GetChargebeeUpdatePaymentMethodCheckoutUrl, GetOwnerPayment, GetOwnerSubscription, PatchStaffWorkingHours, PatchUserById, PostChargebeeNewCheckoutUrl, PostStaffWorkingHours, getUserById } from "../helpers/Api";
+import { EmailVerifyToken, GetChargebeeUpdatePaymentMethodCheckoutUrl, GetOwnerPayment, GetOwnerSubscription, PatchUserByUid, PostChargebeeNewCheckoutUrl, getUserByUid } from "../helpers/Api";
 import { useForm } from "@mantine/form";
 import { canadaProvinceData, countryData, usaStateData } from "../helpers/SelectData";
 import { formatTimestamp12Hours, formatTimestampMonthDayYear, getCurrentTimestamp, getCurrentTimezoneOffset, getFormattedDate, getYearFromDate, isNullOrEmpty } from "../helpers/Helpers";
@@ -233,7 +233,7 @@ export default function ProfileSettings() {
     async function fetchData() {
         if (user) {
             // get user information
-            var userData = await getUserById(user?.uid, session?.access_token);
+            var userData = await getUserByUid(user?.uid, session?.access_token);
             setUserData(userData);
             setSelectedCountry(userData?.country);
             setSelectedProvince(userData?.province);
@@ -348,7 +348,7 @@ export default function ProfileSettings() {
                 classNames: notiicationClasses,
             });
 
-            var response = await PatchUserById(user?.uid, personalForm.values.personal_information, session?.access_token);
+            var response = await PatchUserByUid(user?.uid, personalForm.values.personal_information, session?.access_token);
             if (response === 200) {
                 // succes
                 setTimeout(() => {
@@ -422,7 +422,7 @@ export default function ProfileSettings() {
             //     }
             // }
 
-            var response = await PatchUserById(user?.uid, contactForm.values.contact_information, session?.access_token);
+            var response = await PatchUserByUid(user?.uid, contactForm.values.contact_information, session?.access_token);
             if (response == 200) {
                 // success
                 setTimeout(() => {
@@ -470,7 +470,7 @@ export default function ProfileSettings() {
             });
 
             // TODO: add email verification?
-            var response = await PatchUserById(user?.uid, passwordForm.values.password_information, session?.access_token);
+            var response = await PatchUserByUid(user?.uid, passwordForm.values.password_information, session?.access_token);
             if (response === 200) {
                 // success
                 setTimeout(() => {

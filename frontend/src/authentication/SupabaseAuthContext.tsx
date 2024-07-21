@@ -2,8 +2,8 @@ import { Session, User } from '@supabase/supabase-js';
 import { useContext, useState, useEffect, createContext } from 'react';
 import { supabase, useSupabase } from './SupabaseContext';
 import { useNavigate } from 'react-router-dom';
-import { GetAuthUserEmailByUid, GetBusinessInfoForUserByUid, GetOwnerPayment, GetOwnerSubscription, GetOwnerWorkingHours, GetStaffWorkingHours, getUserById } from '../helpers/Api';
-import { StaffWorkingHours, Subscription, UserProfileModel, UserProfleBusinessInfo } from '../pages/main/AppHome';
+import { GetAuthUserEmailByUid, GetOwnerPayment, GetOwnerSubscription, getUserByUid } from '../helpers/Api';
+import { Subscription, UserProfileModel } from '../pages/main/AppHome';
 import { Group, Loader } from '@mantine/core';
 import React from 'react';
 import { isObjectEmpty } from '../helpers/Helpers';
@@ -23,7 +23,6 @@ const SupabaseAuthContext = createContext<{
 
 export const SupabaseAuthProvider = ({ children }: any) => {
     const [user, setUser] = useState<UserProfileModel | null>(null);
-    const [business, setBusiness] = useState<UserProfleBusinessInfo | null>(null);
     const [localStorageData, setLocalStorageData] = useState("");
     const {signInUser, setIsNewUser, setIsManager, setOnboarding} = useSupabase();
     const [session, setSession] = useState<Session | null>(null);
@@ -72,27 +71,12 @@ export const SupabaseAuthProvider = ({ children }: any) => {
                 }
                 else {
                     localStorage.setItem("data", JSON.stringify(localStorageData));
-                    setBusiness(localStorageData);
                 }
                 
                 setLocalStorageData(localStorageData);
 
                 // get user info
-                var userInfo = await getUserById(authSession.user?.id, authSession.access_token); 
-
-                // get user working hours
-                let workingHours: StaffWorkingHours = {} as StaffWorkingHours;
-                switch(userInfo?.role) {
-                    case 'STAFF':
-                        workingHours = await GetStaffWorkingHours(userInfo?.uid, authSession?.access_token);
-                        break;
-                    case 'OWNER':
-                        workingHours = await GetOwnerWorkingHours(userInfo?.uid, authSession?.access_token);
-                        break;
-                    case 'USER':
-                        // TODO: get user working hours
-                        break;
-                }
+                var userInfo = await getUserByUid(authSession.user?.id, authSession.access_token); 
 
                 if (!userInfo?.active) {
                     // if account is not active auto logout

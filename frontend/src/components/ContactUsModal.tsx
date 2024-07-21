@@ -1,9 +1,8 @@
 import { Avatar, Badge, Button, Group, Modal, Stack, Table, TextInput, Textarea, Title, Text, ScrollArea, Space, Paper, Grid } from "@mantine/core";
 import { useState } from "react";
-import { getStatusColor } from "../helpers/Helpers";
 import { randomId } from "@mantine/hooks";
 import { ContactUsForm } from "./ContactUsForm";
-import classes from "../../../css/UserProfileModal.module.css";
+import classes from "../css/UserProfileModal.module.css";
 
 interface IContactUsModal {
     modalOpened: boolean;

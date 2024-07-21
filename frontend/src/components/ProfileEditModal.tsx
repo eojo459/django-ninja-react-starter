@@ -1,16 +1,16 @@
 import { Button, Grid, Group, Modal, Select, TextInput, Title, Text, rem, NumberInput, Switch, useMantineTheme } from "@mantine/core";
 import { canadaProvinceData, countryData, genderSelectData, usaStateData } from "../helpers/SelectData";
-import classes from "../../../css/TextInput.module.css";
+import classes from "../css/TextInput.module.css";
 import { UserProfileModel } from "../pages/main/AppHome";
 import { useForm } from "@mantine/form";
 import { useEffect, useState } from "react";
 import { FormProvider } from "antd/es/form/context";
 import { formatDate, isNullOrEmpty } from "../helpers/Helpers";
-import { GetEmploymentPositionType, GetEmploymentPositionsByEmploymentTypeId, PatchStaff, PatchStaffWorkingHours, PatchUserById as PatchUser } from "../helpers/Api";
+import { PatchUserByUid } from "../helpers/Api";
 import { useAuth } from "../authentication/SupabaseAuthContext";
-import classes2 from "../../../css/ProfileEditModal.module.css";
+import classes2 from "../css/ProfileEditModal.module.css";
 import { notifications } from "@mantine/notifications";
-import notiicationClasses from "../../../css/Notifications.module.css";
+import notiicationClasses from "../css/Notifications.module.css";
 import { IconCheck, IconX } from "@tabler/icons-react";
 import { DatePickerInput } from "@mantine/dates";
 import { theme } from "antd";
@@ -138,7 +138,7 @@ export default function ProfileEditModal(props: IProfileEditModal) {
         // }
 
         // patch user info (personal & contact info)
-        var response = await PatchUser(userDataProp.uid, form.values, session?.access_token);
+        var response = await PatchUserByUid(userDataProp.uid, form.values, session?.access_token);
         if (response !== 200) {
             // error
             setTimeout(() => {

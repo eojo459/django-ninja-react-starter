@@ -1,9 +1,7 @@
 import { Avatar, Badge, Button, Grid, Group, Loader, Modal, Stack, Table, Text, TextInput, Title, rem } from '@mantine/core';
 import { useEffect, useState } from 'react';
-import { GetChargebeeUpdatePaymentMethodCheckoutUrl, GetUserInfoByUid, getUserById } from '../helpers/Api';
 import { useAuth } from '../authentication/SupabaseAuthContext';
 import { ProfileHeader } from './ProfileHeader';
-import { UserProfileModel } from '../pages/main/AppHome';
 import classes from "../css/UserProfileModal.module.css";
 import inputClasses from "../css/UserProfile.module.css";
 //import { getStatusColor } from '../../../helpers/Helpers';

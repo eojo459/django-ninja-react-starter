@@ -10,6 +10,74 @@ export type EmergencyContactProfile = {
     notes: '',
 };
 
+// get user by uid
+export async function getUserByUid(uid: string, authTokens: any) {
+    try {
+        const response = await axios({
+            method: "GET",
+            url: API_ROUTES.USERS_UID(uid),
+            headers: {
+                'X-JWT': authTokens
+            },
+        })
+        if (response.status === 200) {
+            return response.data;
+        }
+    }
+    catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
+
+// POST new user
+export async function PostNewUser(data: any, authTokens: any) {
+    try {
+        const response = await axios({
+			method: "POST",
+			url: API_ROUTES.USERS,
+            data: data,
+			headers: {
+				'X-JWT': authTokens
+			},
+		})
+        return response.status;
+    } catch (error) {
+        console.error('Error saving data:', error);
+    }
+}
+
+// PATCH/UPDATE the user by uid
+export async function PatchUserByUid(uid: string, userData: any, authTokens: any) {
+    try {
+        const response = await axios({
+			method: "PATCH",
+			url: API_ROUTES.USERS_UID(uid),
+            data: userData,
+			headers: {
+				'X-JWT': authTokens
+			},
+		})
+        return response.status;
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
+
+// DELETE user by uid
+export async function DeleteUserByUid(uid: string, authTokens: any) {
+    try {
+        const response = await axios({
+			method: "DELETE",
+			url: API_ROUTES.USERS_UID(uid),
+			headers: {
+				'X-JWT': authTokens
+			},
+		})
+        return response.status;
+    } catch (error) {
+        console.error('Error deleting user:', error);
+    }
+}
 
 // get the user id by contact number
 export async function getIdByContactNumber(contactNumber: string, isChild: boolean, authTokens: any) {

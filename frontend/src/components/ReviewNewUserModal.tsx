@@ -1,12 +1,12 @@
 import { Button, Grid, Group, Modal, Select, TextInput, Title, Text, rem, Switch, useMantineTheme, NumberInput } from "@mantine/core";
 import { canadaProvinceData, countryData, genderSelectData, usaStateData } from "../helpers/SelectData";
 import classes from "../css/TextInput.module.css";
-import { PositionLabel, UserProfileModel, UserProfilePosition } from "../pages/main/AppHome";
+import { UserProfileModel } from "../pages/main/AppHome";
 import { useForm } from "@mantine/form";
 import { SetStateAction, useEffect, useState } from "react";
 import { FormProvider } from "antd/es/form/context";
 import { formatTime, isNullOrEmpty } from "../helpers/Helpers";
-import { DeleteUserByUid, GetEmploymentPositionType, GetEmploymentPositionsByBusinessId, GetEmploymentPositionsByEmploymentName, GetEmploymentPositionsByEmploymentTypeId, PatchStaff, PatchStaffWorkingHours, PatchUserById, PostApproveStaffUser, getStaffLimitStatus } from "../helpers/Api";
+import { DeleteUserByUid, PostApproveStaffUser } from "../helpers/Api";
 import { useAuth } from "../authentication/SupabaseAuthContext";
 import classes2 from "../css/ProfileEditModal.module.css";
 import { notifications } from "@mantine/notifications";
@@ -43,7 +43,6 @@ export default function ReviewNewUserModal(props: IReviewNewUserModal) {
     const [selectedLabel, setSelectedLabel] = useState<string | null>(null);
     const [startDate, setStartDate] = useState<Date | null>(null);
     const [endDate, setEndDate] = useState<Date | null>(null);
-    const [positionData, setPositionData] = useState<UserProfilePosition>();
     const [positionSelectData, setPositionSelectData] = useState<any[]>([]);
 
     // setup props

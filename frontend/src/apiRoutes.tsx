@@ -15,7 +15,7 @@ export const API_ROUTES = {
     USER: `${BASE_URL}/api/register/`,
     USERS: `${BASE_URL}/api/users/`,
     USERS_ID: (userId: number) => `${BASE_URL}/api/users/id/${userId}`,
-    USERS_UID: (userUid: string) => `${BASE_URL}/api/users/id/${userUid}`,
+    USERS_UID: (userUid: string) => `${BASE_URL}/api/users/uid/${userUid}`,
     USERS_UID_EMAIL: (userUid: string) => `${BASE_URL}/api/users/id/email/${userUid}`,
     USERS_CONTACT_NUMBER: (contact_number: string) => `${BASE_URL}/api/users/contact-number/${contact_number}`,
     USERS_USERNAME: (username: string) => `${BASE_URL}/api/persons/username/${username}`,

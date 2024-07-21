@@ -1,9 +1,7 @@
 import { Avatar, Badge, Button, Grid, Group, Loader, Modal, Stack, Table, Text, Title } from '@mantine/core';
 import { useEffect, useState } from 'react';
-import { GetUserInfoByUid, getUserById } from '../helpers/Api';
 import { useAuth } from '../authentication/SupabaseAuthContext';
 import { ProfileHeader } from './ProfileHeader';
-import { UserProfileModel } from '../pages/main/AppHome';
 import classes from "../css/UserProfileModal.module.css";
 //import { getStatusColor } from '../../../helpers/Helpers';
 

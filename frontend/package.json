@@ -1,7 +1,7 @@
 {
   "name": "frontend",
-  "homepage": "https://verifiedhours.com",
-  "proxy": "https://verifiedhours.com",
+  "homepage": "https://website.com",
+  "proxy": "https://website.com",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

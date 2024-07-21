@@ -1,13 +1,12 @@
 import { Paper, Stack, Title, Text, TextInput, Button, Space, SimpleGrid, Alert, Image, Group, Grid, rem } from "@mantine/core";
 import classes from '../css/TextInput.module.css';
 import { matchesField, useForm } from "@mantine/form";
-import { hashPin, useSupabase } from "../authentication/SupabaseContext";
+import { useSupabase } from "../authentication/SupabaseContext";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { IconBuilding, IconCheck, IconUser, IconX } from "@tabler/icons-react";
-import { PostWaitlist, ValidateCode } from "../helpers/Api";
+import { ValidateCode } from "../helpers/Api";
 import { notifications } from "@mantine/notifications";
-import vsLogo from '../assets/VerifiedHoursLogo2.png';
 import { useAuth } from "../authentication/SupabaseAuthContext";
 import notiicationClasses from "../css/Notifications.module.css";
 
@@ -250,29 +249,6 @@ export default function RegisterCard(props: RegisterCard) {
         }
     }
 
-    async function handleWaitlistJoin() {
-        if (waitlistForm.values.owner_info.email.trim().length > 0) {
-            var response = await PostWaitlist(waitlistForm.values);
-            if (response == 201) {
-                // show success message
-                notifications.show({
-                    color: '#4a8a2a',
-                    title: 'Success!',
-                    message: 'You have been added to our waitlist!',
-                })
-                navigate("/"); // redirect to main page
-            }
-            else {
-                // show error message
-                notifications.show({
-                    color: '#ca4628',
-                    title: 'Error!',
-                    message: 'There was a problem trying to submit your request. Please try again!',
-                })
-            }
-        }
-    }
-
     async function handleValidateInviteCode() {
         if (inviteCode?.length != 6) {
             notifications.show({
@@ -388,7 +364,7 @@ export default function RegisterCard(props: RegisterCard) {
                 <Paper shadow="md" p="lg" mt="50px" radius="lg" style={{ background: "#0f1714", color: "white" }}>
                     <Image
                         radius="md"
-                        src={vsLogo}
+                        //src={vsLogo}
                     //h={30}
                     />
                     <Text
@@ -493,7 +469,7 @@ export default function RegisterCard(props: RegisterCard) {
                         <Grid.Col span={{ base: 12 }}>
                             <Image
                                 radius="md"
-                                src={vsLogo}
+                                //src={vsLogo}
                                 //h={30}
                                 mb="lg"
                             />
@@ -722,7 +698,7 @@ export default function RegisterCard(props: RegisterCard) {
                 <Paper shadow="md" p="lg" mt="50px" radius="lg" style={{ background: "#0f1714", color: "white" }}>
                     <Image
                         radius="md"
-                        src={vsLogo}
+                        //src={vsLogo}
                         //h={30}
                         mb="lg"
                     />
@@ -782,7 +758,7 @@ export default function RegisterCard(props: RegisterCard) {
                         <Grid.Col span={{ base: 12 }}>
                             <Image
                                 radius="md"
-                                src={vsLogo}
+                                //src={vsLogo}
                                 //h={30}
                                 mb="lg"
                             />

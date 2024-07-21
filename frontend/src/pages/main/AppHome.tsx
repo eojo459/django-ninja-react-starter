@@ -14,7 +14,7 @@ import ProfileSettings from "../../components/ProfileSettings";
 import ChargebeeCheckoutModal from "../../components/ChargebeeCheckoutModal";
 import { GetChargebeeUpdateSubscriptionCheckoutUrl, PostChargebeeNewCheckoutUrl } from "../../helpers/Api";
 import { notifications } from "@mantine/notifications";
-import notiicationClasses from "../css/Notifications.module.css";
+import notiicationClasses from "../../css/Notifications.module.css";
 import ChangePlanModal from "../../components/ChangePlanModal";
 
 interface IAppMenu {

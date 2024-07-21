@@ -1,7 +1,6 @@
 import { TextInput, Textarea, SimpleGrid, Group, Title, Button, Paper, Text } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import classes from '../css/TextInput.module.css';
-import { PostContactMessage } from '../helpers/Api';
 import { notifications } from '@mantine/notifications';
 import notiicationClasses from "../css/Notifications.module.css";
 import { useState } from 'react';
@@ -42,7 +41,8 @@ export function ContactUsForm(props: IContactUsForm) {
             setLoading(true);
 
             // post new message if valid
-            var response = await PostContactMessage(form.values);
+            //var response = await PostContactMessage(form.values);
+            var response;
             if (response == 201) {
                 notifications.show({
                     color: '#4a8a2a',
