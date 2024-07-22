@@ -63,8 +63,8 @@ export interface UserProfileModel {
     active: boolean;
     local_storage_data?: string;
     plan?: number;
-    subscription: Subscription;
-    payment: Payment;
+    subscription?: Subscription;
+    payment?: Payment;
     confirm_email: boolean;
     pending_approval: boolean;
 }

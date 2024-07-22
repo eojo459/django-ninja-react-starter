@@ -18,13 +18,8 @@ export const defaultLinks = [
 ];
 
 export const userLinks = [
-    { link: 'homebase', label: 'Home', notifications: false },
-    { link: 'home', label: 'Dashboard', notifications: false },
-    { link: 'registration', label: 'Registration', notifications: false },
-    { link: 'management', label: 'Management', notifications: false },
-    { link: 'attendance', label: 'Attendance', notifications: false },
-    { link: 'inbox', label: 'Inbox', notifications: true },
-    { link: 'report', label: 'Reports', notifications: false },
+    { link: 'menu', label: 'Home', notifications: false },
+    { link: 'profile', label: 'Profile', notifications: false },
     { link: 'settings', label: 'Settings', notifications: false },
 ];
 
@@ -103,7 +98,7 @@ export function SimpleHeader() {
                 </Group> */}
 
                 {/* NO AUTH  */}
-                {user?.role !== "OWNER" && user?.role !== "STAFF" && (
+                {user?.role !== "USER" && (
                     <>
                         <Image
                             radius="md"
@@ -181,7 +176,7 @@ export function SimpleHeader() {
                             style={{ cursor: 'pointer' }}
                             onClick={() => {
                                 navigate("/dashboard");
-                                setActive('homebase');
+                                setActive('menu');
                             }}
                             mr="lg"
                             p="md"

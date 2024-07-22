@@ -1,7 +1,7 @@
 import { AuthSession, createClient } from '@supabase/supabase-js'
 import LogoutCard from '../components/LogoutCard';
 import { Navigate, NavigateFunction, useNavigate } from 'react-router-dom';
-import { CheckUsers, GetAuthUserEmailByUsername, GetOwnerPayment, GetOwnerSubscription, getUserByUid, PostNewUser } from '../helpers/Api';
+import { CheckUsers, GetAuthUserEmailByUsername, GetOwnerPayment, GetOwnerSubscription, getUserByUid, LoginUser, PostNewUser } from '../helpers/Api';
 import { useAuth } from './SupabaseAuthContext';
 import { useNavigationContext } from '../context/NavigationContext';
 import { UserProfileModel } from '../pages/main/AppHome';
@@ -61,7 +61,7 @@ export const SupabaseContextProvider = ({ children }: any) => {
         // check if username already exists
         var usernameData = { 'username': form.username }
         var usernameExists = await CheckUsers(usernameData);
-        if (usernameExists) {
+        if (usernameExists !== 200) {
             // show error
             setTimeout(() => {
                 notifications.show({
@@ -80,7 +80,7 @@ export const SupabaseContextProvider = ({ children }: any) => {
         // check if email already exists
         var emailData = { 'email': form.email }
         var emailExists = await CheckUsers(emailData);
-        if (emailExists) {
+        if (emailExists !== 200) {
             // show error
             setTimeout(() => {
                 notifications.show({
@@ -96,105 +96,129 @@ export const SupabaseContextProvider = ({ children }: any) => {
             return false;
         }
 
-        // check if cell number already exists
-        var cellNumberData = { 'cell_number': form.cell_number }
-        var cellNumberExists = await CheckUsers(cellNumberData);
-        if (cellNumberExists) {
-            // show error
-            setTimeout(() => {
-                notifications.show({
-                    color: 'red',
-                    title: 'Error',
-                    message: 'The cell phone number already exists.',
-                    icon: <IconX style={{ width: rem(18), height: rem(18) }} />,
-                    loading: false,
-                    autoClose: 5000,
-                    classNames: notiicationClasses,
-                });
-            }, 2000);
+        // create new auth user in supabase
+        // const {data: authData, error: authError } = await supabase.auth.signUp({
+        //     email: form.email,
+        //     password: form.password,
+        //     options: {
+        //         data: {
+        //             username: form.username,
+        //             cell_number: form.cell_number,
+        //             role: userType,
+        //             pin_code: form.pin_code,
+        //             email: form.email,
+        //         }
+        //     }
+        // });
+
+        var staffUser = {
+            'username': form.username,
+            'first_name': form.first_name,
+            'last_name': form.last_name,
+            'email': form.email,
+            'role': userType,
+            'password': form.password,
+        }
+        var newUserResponse = await PostNewUser(staffUser); 
+
+        if (newUserResponse === 200) {
+            // sign into supabase auth first
+            const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+                email: form.email,
+                password: form.password,
+            });
+
+            if (signInData == null) {
+                console.log(signInError);
+                return false;
+            }
+
+            // sign in user to django server
+            var loginData = {
+                'username': '',
+                'email': form.email,
+                'password': form.password,
+            }
+
+            var loginResponse = await LoginUser(loginData);
+            if (loginResponse !== 200) {
+                return false;
+            }
+
+            navigate('/dashboard');
+            window.location.reload();
+            return true;
+        }
+        else {
+            console.log("Error signing up new user");
             return false;
         }
 
-        // create new auth user in supabase
-        const {data: authData, error: authError } = await supabase.auth.signUp({
-            email: form.email,
-            password: form.password,
-            options: {
-                data: {
-                    username: form.username,
-                    cell_number: form.cell_number,
-                    role: userType === "STAFF_INVITE" ? "STAFF" : userType,
-                    pin_code: form.pin_code,
-                    email: form.email,
-                }
-            }
-        });
+        // if (authData.user != null) {
+        //     // get data from supabase table
+        //     const { data: userData, error: userError } = await supabase
+        //         .from('users')
+        //         .select()
+        //         .eq('id', authData.user.id)
+        //         .limit(1)
+        //         .single();
 
-        if (authData.user != null) {
-            // get data from supabase table
-            const { data: userData, error: userError } = await supabase
-                .from('users')
-                .select()
-                .eq('id', authData.user.id)
-                .limit(1)
-                .single();
-
-            if (userData != null) {
-                // send data to django database
-                if (userType === 'USER') {
-                    // create user from registration form 
-                    var staffUser = {
-                        'uid': userData.id,
-                        'username': form.username,
-                        'first_name': form.first_name,
-                        'last_name': form.last_name,
-                        'email': form.email,
-                        'cell_number': form.cell_number,
-                        'home_number': form.home_number,
-                        'work_number': form.work_number,
-                        'street': form.street,
-                        'street_2': form.street_2,
-                        'city': form.city,
-                        'province': form.province,
-                        'country': form.country,
-                        'postal_code': form.postal_code,
-                        'gender': form.gender,
-                        'role': userType,
-                        'pin_code': form.pin_code,
-                        'password': userData.encrypted_password,
-                        'created_at': userData.created_at,
-                        'position': form.position,
-                    }
-                    await PostNewUser(staffUser, authData?.session?.access_token);
-                }
+        //     if (userData != null) {
+        //         // send data to django database
+        //         if (userType === 'USER') {
+        //             // create user from registration form 
+        //             var staffUser = {
+        //                 'uid': userData.id,
+        //                 'username': form.username,
+        //                 'first_name': form.first_name,
+        //                 'last_name': form.last_name,
+        //                 'email': form.email,
+        //                 'cell_number': form.cell_number,
+        //                 'home_number': form.home_number,
+        //                 'work_number': form.work_number,
+        //                 'street': form.street,
+        //                 'street_2': form.street_2,
+        //                 'city': form.city,
+        //                 'province': form.province,
+        //                 'country': form.country,
+        //                 'postal_code': form.postal_code,
+        //                 'gender': form.gender,
+        //                 'role': userType,
+        //                 'pin_code': form.pin_code,
+        //                 'password': userData.encrypted_password,
+        //                 'created_at': userData.created_at,
+        //                 'position': form.position,
+        //             }
+        //             await PostNewUser(staffUser, authData?.session?.access_token);
+        //         }
                 
-                // sign in user after signing up
-                if (userType === 'USER') {
-                    setTimeout(async () => {
-                        const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-                            email: form.email,
-                            password: form.password,
-                        });
+        //         // sign in user after signing up
+        //         if (userType === 'USER') {
+        //             setTimeout(async () => {
+        //                 const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+        //                     email: form.email,
+        //                     password: form.password,
+        //                 });
 
-                        if (signInData != null) {
-                            navigate('/dashboard');
-                            window.location.reload();
-                            return true;
-                        }
-                        else {
-                            console.log(signInError);
-                            return false;
-                        }
+        //                 if (signInData != null) {
+        //                     navigate('/dashboard');
+        //                     window.location.reload();
+        //                     return true;
+        //                 }
+        //                 else {
+        //                     console.log(signInError);
+        //                     return false;
+        //                 }
 
-                    }, 2000);
-                }
-                return true;
-            }
-        }
-        else {
-            console.log(authError);
-        }
-        return false;
+        //             }, 2000);
+        //         }
+        //         return true;
+        //     }
+        // }
+        // else {
+        //     console.log(authError);
+        // }
+        //return false;
     }
 
     // sign in a user
@@ -213,24 +237,44 @@ export const SupabaseContextProvider = ({ children }: any) => {
                     console.log(error);
                     return false;
                 }
+
+                // sign in user to django server
+                var emailLoginData = {
+                    'email': form.username,
+                    'password': form.password,
+                }
+
+                var emailLoginResponse = await LoginUser(emailLoginData);
+                if (emailLoginResponse !== 200) {
+                    return false;
+                }
+
                 break;
             case "username":
                 // sign in with username
                 // search table for user who owns username
-                var authData = {
-                    'request_type': 'no-auth',
-                }
-                var authUserEmail: any = await GetAuthUserEmailByUsername(form.username, authData);
+                var authUserEmail: any = await GetAuthUserEmailByUsername(form.username);
                 
                 if (authUserEmail != null && authUserEmail !== undefined) {
                     // sign in with email
                     ({ data, error } = await supabase.auth.signInWithPassword({
-                        email: authUserEmail.data['email'],
+                        email: authUserEmail,
                         password: form.password,
                     }));
 
                     if (error != null) {
                         console.log(error);
+                        return false;
+                    }
+
+                    // sign in user to django server
+                    var usernameLoginData = {
+                        'email': authUserEmail,
+                        'password': form.password,
+                    }
+
+                    var usernameLoginResponse = await LoginUser(usernameLoginData);
+                    if (usernameLoginResponse !== 200) {
                         return false;
                     }
                 }
@@ -259,17 +303,17 @@ export const SupabaseContextProvider = ({ children }: any) => {
                         return {'error': 'Disabled'};
                     }
 
-                    if (userInfo?.role === 'OWNER') {
-                        // get subscription info
-                        var ownerSubscription = await GetOwnerSubscription(userInfo?.id, authSession?.access_token);
+                    // if (userInfo?.role === 'OWNER') {
+                    //     // get subscription info
+                    //     var ownerSubscription = await GetOwnerSubscription(userInfo?.id, authSession?.access_token);
 
-                        // get payment info
-                        var payment = await GetOwnerPayment(userInfo?.id, authSession?.access_token);
-                    }
+                    //     // get payment info
+                    //     var payment = await GetOwnerPayment(userInfo?.id, authSession?.access_token);
+                    // }
                     
                     const newUser: UserProfileModel = {
-                        subscription: ownerSubscription,
-                        payment: payment,
+                        //subscription: ownerSubscription,
+                        //payment: payment,
                         uid: authSession.user?.id || "",
                         email: authSession.user?.email || "",
                         username: userInfo?.username || "",
@@ -299,8 +343,7 @@ export const SupabaseContextProvider = ({ children }: any) => {
 
             var role = data.user?.user_metadata.role;
             switch (role) {
-                case "OWNER":
-                case "STAFF":
+                case "USER":
                     setTimeout(() => {
                         navigate('/dashboard');
                         window.location.reload();

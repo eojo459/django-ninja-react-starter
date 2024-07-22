@@ -41,8 +41,6 @@ const mockdata = [
 const userData = [
     { title: 'Home', icon: IconHome, link: 'menu' },
     { title: 'Profile', icon: IconUserPlus, link: 'profile' },
-    { title: 'Page2', icon: IconCalendarTime, link: 'attendance' },
-    { title: 'Inbox', icon: IconMail, link: 'inbox' },
     { title: 'Settings', icon: IconSettings, link: 'settings' },
 ];
 

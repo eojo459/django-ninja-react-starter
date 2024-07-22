@@ -4,7 +4,7 @@ import { matchesField, useForm } from "@mantine/form";
 import { useSupabase } from "../authentication/SupabaseContext";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { IconBuilding, IconCheck, IconUser, IconX } from "@tabler/icons-react";
+import { IconBuilding, IconCheck, IconMail, IconUser, IconX } from "@tabler/icons-react";
 import { ValidateCode } from "../helpers/Api";
 import { notifications } from "@mantine/notifications";
 import { useAuth } from "../authentication/SupabaseAuthContext";
@@ -18,8 +18,8 @@ export default function RegisterCard(props: RegisterCard) {
     const { user, session } = useAuth();
     const { signUpNewUser } = useSupabase();
     const navigate = useNavigate();
-    const [isOwner, setIsOwner] = useState(false);
-    const [isEmployee, setIsEmployee] = useState(false);
+    const [isUser, setIsUser] = useState(false);
+    const [isUserViaInviteCode, setIsUserViaInviteCode] = useState(false);
     const [stepCount, setStepCount] = useState(0);
     const location = useLocation();
     const [queryParams, setQueryParams] = useState<Record<string, string>>({});
@@ -101,7 +101,7 @@ export default function RegisterCard(props: RegisterCard) {
     useEffect(() => {
         if (initialStateProp == 1) {
             // set employee state
-            setIsEmployee(true);
+            setIsUserViaInviteCode(true);
         }
     }, [initialStateProp]);
 
@@ -118,16 +118,12 @@ export default function RegisterCard(props: RegisterCard) {
         setInviteCode(params['code']);
 
         // set owner flag &isOwner=
-        setIsOwner(params['isOwner'] === "true" ? true : false);
+        setIsUser(params['isUser'] === "true" ? true : false);
         setQueryParams(params);
     }, [location.search]);
 
-    // register new owner account
+    // register new account
     async function handleRegister() {
-        // TODO hash pin
-        // var hashedPincode = await hashPin(form.values.pin_code, form.values.username);
-        // form.values.pin_code = hashedPincode;
-        
         // show notification
         const id = notifications.show({
             loading: true,
@@ -150,7 +146,7 @@ export default function RegisterCard(props: RegisterCard) {
             });
         }, 1000);
 
-        var response = await signUpNewUser(form.values, "OWNER", navigate);
+        var response = await signUpNewUser(form.values, "USER", navigate);
         if (response) {
             // success
             setTimeout(() => {
@@ -186,10 +182,8 @@ export default function RegisterCard(props: RegisterCard) {
         }
     }
 
-    // register new staff account
-    async function handleRegisterStaff() {
-        // TODO hash pin
-
+    // register new account after validating invite code
+    async function handleRegisterViaInviteCode() {
         // show notification
         const id = notifications.show({
             loading: true,
@@ -212,8 +206,7 @@ export default function RegisterCard(props: RegisterCard) {
             });
         }, 1000);
 
-        // register new staff and link them to the business owner as unassigned  
-        var response = await signUpNewUser(staffForm.values, "STAFF_INVITE", navigate);
+        var response = await signUpNewUser(staffForm.values, "USER", navigate);
         if (response) {
             // success
             setTimeout(() => {
@@ -274,7 +267,6 @@ export default function RegisterCard(props: RegisterCard) {
 
         var data = {
             'code': inviteCode,
-            'request_type': 'no-auth',
         }
 
         // check if code exists and verify code with server
@@ -360,7 +352,7 @@ export default function RegisterCard(props: RegisterCard) {
 
     return (
         <>
-            {isOwner === false && isEmployee === false && (
+            {isUser === false && isUserViaInviteCode === false && (
                 <Paper shadow="md" p="lg" mt="50px" radius="lg" style={{ background: "#0f1714", color: "white" }}>
                     <Image
                         radius="md"
@@ -382,11 +374,11 @@ export default function RegisterCard(props: RegisterCard) {
                             p="lg"
                             radius="lg"
                             style={{ background: "#24352f", color: "white", cursor: "pointer" }}
-                            onClick={() => setIsOwner(true)}
+                            onClick={() => setIsUser(true)}
                         >
                             <Stack align="center">
-                                <IconBuilding />
-                                <Text ta="center" size="lg" fw={700}>I am a business owner/employer</Text>
+                                <IconUser />
+                                <Text ta="center" size="lg" fw={700}>Register for a Free account</Text>
                             </Stack>
                         </Paper>
                         <Paper
@@ -394,76 +386,19 @@ export default function RegisterCard(props: RegisterCard) {
                             p="lg"
                             radius="lg"
                             style={{ background: "#24352f", color: "white", cursor: "pointer" }}
-                            onClick={() => setIsEmployee(true)}
+                            onClick={() => setIsUserViaInviteCode(true)}
                         >
                             <Stack align="center">
-                                <IconUser />
-                                <Text ta="center" size="lg" fw={700}>I am an employee</Text>
+                                <IconMail />
+                                <Text ta="center" size="lg" fw={700}>Enter an invite code</Text>
                             </Stack>
                         </Paper>
                     </SimpleGrid>
                 </Paper>
             )}
 
-            {/* {isOwner && (
-                <Paper shadow="md" p="lg" mt="50px" radius="lg" style={{ background: "#0f1714", color: "white" }}>
-                    <Stack>
-                        <Image
-                            radius="md"
-                            src={vsLogo}
-                            //h={30}
-                        />
-                        <Text 
-                            size="24px" 
-                            fw={900} 
-                            ta="center" 
-                            style={{ letterSpacing: "1.2px" }}
-                        >
-                            Efficient time tracking starts here 🕓
-                        </Text>
-                        <Text ta="center">Join our waitlist to be notified when we launch!</Text>
-                        <Space />
-                        <TextInput
-                            required
-                            id="email"
-                            //className={computedColorScheme == 'light' ? "input-light" : "input-dark"}
-                            label="Email"
-                            name="email"
-                            placeholder="Enter an email"
-                            size="lg"
-                            classNames={classes}
-                            {...waitlistForm.getInputProps('owner_info.email')}
-                        />
-                    </Stack>
-                    <Group mt="lg" justify="space-between">
-                        <Button 
-                            type="submit" 
-                            size="md" 
-                            radius="md"
-                            variant="light"
-                            color="gray"
-                            //mt="lg"
-                            mr="lg"
-                            onClick={() => setIsOwner(false)}
-                        >
-                            Back
-                        </Button>
-                        <Button
-                            //color="#3c5b4c"
-                            color="#4a8a2a"
-                            radius="md"
-                            size="md"
-                            //fullWidth
-                            //onClick={handleRegister}
-                            onClick={handleWaitlistJoin}
-                        >
-                            <Title order={4}>Join waitlist</Title>
-                        </Button>
-                    </Group>
-                </Paper>
-            )} */}
-
-            {isOwner && isEmployee === false && (
+            {/* regular register for free account */}
+            {isUser && isUserViaInviteCode === false && (
                 <Paper shadow="md" p="lg" mt="50px" radius="lg" style={{ background: "#0f1714", color: "white" }}>
                     <Grid align="end">
                         <Grid.Col span={{ base: 12 }}>
@@ -473,7 +408,7 @@ export default function RegisterCard(props: RegisterCard) {
                                 //h={30}
                                 mb="lg"
                             />
-                            <Text size="24px" fw={900} mb="sm">Efficient time tracking starts here 🕓</Text>
+                            <Text size="24px" fw={900} mb="sm">Register for a free account</Text>
                             <Text>Sign up for a free account in less than 60 seconds!</Text>
                         </Grid.Col>
                         <Grid.Col span={{ base: 6 }} mt="lg">
@@ -576,109 +511,6 @@ export default function RegisterCard(props: RegisterCard) {
                             <Text>Already have an account? <a style={{ textDecoration: "underline", cursor: "pointer" }} onClick={() => navigate("/login")}>Login</a></Text>
                         </Grid.Col>
                     </Grid>
-                    {/* <Stack>
-                        <Image
-                            radius="md"
-                            src={vsLogo}
-                            //h={30}
-                            mb="lg"
-                        />
-                        <Text size="24px" fw={900}>Efficient time tracking starts here 🕓</Text>
-                        <Text>Sign up for a free account in less than 60 seconds!</Text>
-                        <Space />
-                        <TextInput
-                            required
-                            id="username"
-                            //className={computedColorScheme == 'light' ? "input-light" : "input-dark"}
-                            label="Username"
-                            name="username"
-                            placeholder="Enter a username"
-                            size="lg"
-                            classNames={classes}
-                            {...form.getInputProps('owner_info.username')}
-                        />
-                        <TextInput
-                            required
-                            id="username"
-                            //className={computedColorScheme == 'light' ? "input-light" : "input-dark"}
-                            label="Username"
-                            name="username"
-                            placeholder="Enter a username"
-                            size="lg"
-                            classNames={classes}
-                            {...form.getInputProps('owner_info.username')}
-                        />
-                        <TextInput
-                            required
-                            id="username"
-                            //className={computedColorScheme == 'light' ? "input-light" : "input-dark"}
-                            label="Username"
-                            name="username"
-                            placeholder="Enter a username"
-                            size="lg"
-                            classNames={classes}
-                            {...form.getInputProps('owner_info.username')}
-                        />
-                        <TextInput
-                            required
-                            id="email"
-                            //className={computedColorScheme == 'light' ? "input-light" : "input-dark"}
-                            label="Email"
-                            name="email"
-                            placeholder="Enter an email"
-                            size="lg"
-                            classNames={classes}
-                            {...form.getInputProps('owner_info.email')}
-                        />
-                        <TextInput
-                            required
-                            id="password"
-                            //className={computedColorScheme == 'light' ? "input-light" : "input-dark"}
-                            label="Password"
-                            name="password"
-                            placeholder="Enter a password"
-                            type="password"
-                            size="lg"
-                            classNames={classes}
-                            {...form.getInputProps('owner_info.password')}
-                        /> */}
-                    {/* <TextInput
-                            required
-                            id="confirm-password"
-                            //className={computedColorScheme == 'light' ? "input-light" : "input-dark"}
-                            label="Confirm password"
-                            name="confirm_password"
-                            placeholder="Confirm your password"
-                            type="password"
-                            size="lg"
-                            classNames={classes}
-                            {...form.getInputProps('owner_info.confirm_password')}
-                        />
-                        <TextInput
-                            required
-                            id="pin_code"
-                            //className={computedColorScheme == 'light' ? "input-light" : "input-dark"}
-                            label="Pin code"
-                            name="pin_code"
-                            placeholder="Enter a 5 digit pin code"
-                            type="password"
-                            size="lg"
-                            maxLength={5}
-                            classNames={classes}
-                            {...form.getInputProps('owner_info.pin_code')}
-                        /> */}
-                    {/* <Button
-                            //color="#3c5b4c"
-                            color="#4a8a2a"
-                            radius="md"
-                            size="md"
-                            fullWidth
-                            onClick={handleRegister}
-                        >
-                            <Title order={4}>Sign up (Free)</Title>
-                        </Button>
-                        <Text>Already have an account? <a style={{ textDecoration: "underline", cursor: "pointer" }} onClick={() => navigate("/login")}>Login</a></Text>
-                    </Stack> */}
                     <Button
                         type="submit"
                         size="md"
@@ -687,14 +519,15 @@ export default function RegisterCard(props: RegisterCard) {
                         color="gray"
                         mt="lg"
                         mr="lg"
-                        onClick={() => setIsOwner(false)}
+                        onClick={() => setIsUser(false)}
                     >
                         Back
                     </Button>
                 </Paper>
             )}
 
-            {isEmployee && stepCount === 0 && (
+            {/* enter/validate invite code */}
+            {isUserViaInviteCode && stepCount === 0 && (
                 <Paper shadow="md" p="lg" mt="50px" radius="lg" style={{ background: "#0f1714", color: "white" }}>
                     <Image
                         radius="md"
@@ -718,9 +551,9 @@ export default function RegisterCard(props: RegisterCard) {
                     //{...form.getInputProps('owner_info.email')}
                     />
                     <Text ta="center">Don't have an invite code?</Text>
-                    <Text ta="center">Reach out to your employer and they will give you one.</Text>
+                    <Text ta="center">Reach out to [NAME] and they will give you one.</Text>
                     <Space h="lg" />
-                    <Text ta="center">Other issues contact support at support@verifiedhours.com</Text>
+                    <Text ta="center">Other issues contact support at support@website.com</Text>
                     <Group justify="space-between">
                         <Button
                             type="submit"
@@ -730,7 +563,7 @@ export default function RegisterCard(props: RegisterCard) {
                             color="gray"
                             mt="lg"
                             mr="lg"
-                            onClick={() => setIsEmployee(false)}
+                            onClick={() => setIsUserViaInviteCode(false)}
                         >
                             Back
                         </Button>
@@ -751,8 +584,8 @@ export default function RegisterCard(props: RegisterCard) {
                 </Paper>
             )}
 
-            {/* staff registration */}
-            {isEmployee && stepCount === 1 && (
+            {/* register after invite code validation */}
+            {isUserViaInviteCode && stepCount === 1 && (
                 <Paper shadow="md" p="lg" mt="50px" radius="lg" style={{ background: "#0f1714", color: "white" }}>
                     <Grid align="end">
                         <Grid.Col span={{ base: 12 }}>
@@ -762,7 +595,7 @@ export default function RegisterCard(props: RegisterCard) {
                                 //h={30}
                                 mb="lg"
                             />
-                            <Text size="24px" fw={900} mb="sm">Efficient time tracking starts here 🕓</Text>
+                            <Text size="24px" fw={900} mb="sm">Register for a free account</Text>
                             <Text>Sign up for a free account in less than 60 seconds!</Text>
                         </Grid.Col>
                         <Grid.Col span={{ base: 6 }} mt="lg">
@@ -846,7 +679,7 @@ export default function RegisterCard(props: RegisterCard) {
                             />
                         </Grid.Col>
                         <Grid.Col span={{ base: 12 }}>
-                            <form onSubmit={staffForm.onSubmit(handleRegisterStaff, handleError)}>
+                            <form onSubmit={staffForm.onSubmit(handleRegisterViaInviteCode, handleError)}>
                                 <Button
                                     //color="#3c5b4c"
                                     color="#4a8a2a"

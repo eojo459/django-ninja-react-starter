@@ -7,6 +7,7 @@ from ninja import Router, Schema
 from .models import User
 from decouple import config
 from supabase import create_client, Client
+from ninja.errors import HttpError
 
 router = Router()
 
@@ -22,8 +23,10 @@ class UserRegisterIn(Schema):
     password: str
     role: str
 
+class UserRegisterOut(Schema):
+    id: UUID
+
 class UserSignIn(Schema):
-    username: str
     email: str
     password: str
 
@@ -96,14 +99,17 @@ class UserOutFull(Schema):
 class UserOut(Schema):
     id: UUID
     uid: UUID
-    first_name: str
-    last_name: str
+    #first_name: str
+    #last_name: str
     username: str
     email: str
     active: bool
     archived: bool
     confirm_email: bool
     role: str
+
+class UserEmailOut(Schema):
+    email: str
 
 ################################
 # API CONTROLLER METHODS
@@ -112,6 +118,11 @@ class UserOut(Schema):
 # create new user
 @router.post("/", auth=None)
 def create_user(request, payload: UserRegisterIn):
+    # check and make sure email and user do not already exist
+    response = supabase.table("users").select().eq('email', payload.email).execute()
+    if response.count > 0:
+        raise HttpError(400, "Name and description are required")
+
     # create auth user in supabase
     signup_response = supabase.auth.sign_up(
         credentials={ 
@@ -130,38 +141,39 @@ def create_user(request, payload: UserRegisterIn):
         'role': payload.role,
     }
     user = User.objects.create(**new_user)
-    return {"id": user.id}
+    return {"status": 201, "id": user.id}
 
 # sign in auth user in supabase
-@router.post("/login/", auth=None)
+@router.post("/auth/login/", auth=None)
 def sign_in_user(request, payload: UserSignIn):
     if payload.email is not None and payload.email != "":
         # sign in with email
         user = get_object_or_404(User, email=payload.email)
-        signin_response = supabase.auth.sign_in_with_password(
-            {
-                "email": payload.email, 
-                "password": payload.password,
-            }
-        )
+        # signin_response = supabase.auth.sign_in_with_password(
+        #     {
+        #         "email": payload.email, 
+        #         "password": payload.password,
+        #     }
+        # )      
     else:
         # sign in with username
         user = get_object_or_404(User, username=payload.username)
-        signin_response = supabase.auth.sign_in_with_password(
-            {
-                "email": user.email, 
-                "password": payload.password,
-            }
-        )
+        # signin_response = supabase.auth.sign_in_with_password(
+        #     {
+        #         "email": user.email, 
+        #         "password": payload.password,
+        #     }
+        # )
 
     # update last logged in timestamp
     user.last_logged_in = datetime.now()
     user.save()
 
-    return {"token": signin_response.session.access_token}
+    #return {"status": 200, "token": signin_response.session.access_token}
+    return {"success": True}
 
 # sign out auth user in supabase
-@router.post("/logout/")
+@router.post("/auth/logout/")
 def sign_out_user(request):
     res = supabase.auth.sign_out()
     return res
@@ -190,7 +202,7 @@ def update_password(request, payload: PasswordUpdate):
 # TODO: password reset
 
 # check if current user info/data exists
-@router.get("/auth/check/")
+@router.get("/auth/check/", auth=None)
 def auth_check_users(request, username: str = None, email: str = None):
     username_count = 0
     email_count = 0
@@ -198,12 +210,17 @@ def auth_check_users(request, username: str = None, email: str = None):
     if username is not None:
         # check if username already exists
         username_count = User.objects.filter(username=username).count()
+        if username_count > 0:
+            return {'status': 404}
     
     if email is not None:
         # check if email already exists
         email_count = User.objects.filter(email=email).count()
+        if email_count > 0:
+            return {'status': 404}
 
-    return {'username_count': username_count, 'email_count': email_count}
+    #return {'username_count': username_count, 'email_count': email_count}
+    return {'status': 200}
 
 # get current auth user session
 @router.get("/auth/session/")
@@ -240,6 +257,18 @@ def get_user_by_uid(request, user_uid: str):
 def get_user_by_id(request, user_id: str):
     user = get_object_or_404(User, id=user_id)
     return user
+
+# get user by username
+@router.get("/username/{username}", response=UserOut)
+def get_user_by_username(request, username: str):
+    user = get_object_or_404(User, uid=username)
+    return user
+
+# get user email by username
+@router.get("/username/{username}/email/", response=UserEmailOut, auth=None)
+def get_user_email_by_username(request, username: str):
+    user = get_object_or_404(User, username=username)
+    return {"email": user.email}
 
 # get all users
 @router.get("/", response=List[UserOut])

@@ -84,19 +84,20 @@ export const SupabaseAuthProvider = ({ children }: any) => {
                     return;
                 }
 
-                if (userInfo?.role === 'OWNER') {
-                    // get subscription info
-                    var ownerSubscription = await GetOwnerSubscription(userInfo?.uid, authSession?.access_token);
+                // check for subscription/payment info
+                // if (userInfo?.role === 'USER') {
+                //     // get subscription info
+                //     var userSubscription = await GetOwnerSubscription(userInfo?.uid, authSession?.access_token);
 
-                    // get payment info
-                    var payment = await GetOwnerPayment(userInfo?.uid, authSession?.access_token);
-                }
+                //     // get payment info
+                //     var payment = await GetOwnerPayment(userInfo?.uid, authSession?.access_token);
+                // }
                 
                 // setup user info to be saved/cached
                 const newUser: UserProfileModel = {
                     local_storage_data: localStorageData,
-                    subscription: ownerSubscription,
-                    payment: payment,
+                    //subscription: userSubscription,
+                    //payment: payment,
                     uid: authSession.user?.id || "",
                     email: authSession.user?.email || "",
                     username: userInfo?.username || "",

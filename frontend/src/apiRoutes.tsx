@@ -1,5 +1,5 @@
-const BASE_URL = 'https://website.com';
-//const BASE_URL = 'http://localhost:8000';
+//const BASE_URL = 'https://website.com';
+const BASE_URL = 'http://localhost:8000';
 //const BASE_URL = 'https://dev.website.com';
 const GEOAPIFY_BASE_URL = 'https://api.geoapify.com/v1';
 const GEOAPIFY_API_KEY = '09c676a64439453ba2380eab97232940';
@@ -14,12 +14,15 @@ export const API_ROUTES = {
     // auth user
     USER: `${BASE_URL}/api/register/`,
     USERS: `${BASE_URL}/api/users/`,
+    AUTH_LOGIN: `${BASE_URL}/api/users/auth/login/`,
+    AUTH_LOGOUT: `${BASE_URL}/api/users/auth/logout/`,
+    AUTH_CHECK: `${BASE_URL}/api/users/auth/check/`,
     USERS_ID: (userId: number) => `${BASE_URL}/api/users/id/${userId}`,
     USERS_UID: (userUid: string) => `${BASE_URL}/api/users/uid/${userUid}`,
     USERS_UID_EMAIL: (userUid: string) => `${BASE_URL}/api/users/id/email/${userUid}`,
     USERS_CONTACT_NUMBER: (contact_number: string) => `${BASE_URL}/api/users/contact-number/${contact_number}`,
     USERS_USERNAME: (username: string) => `${BASE_URL}/api/persons/username/${username}`,
-    USERS_USERNAME_EMAIL: (username: string) => `${BASE_URL}/api/persons/username/email/${username}`,
+    USERS_USERNAME_EMAIL: (username: string) => `${BASE_URL}/api/users/username/${username}/email/`,
     USER_INFO_UID: (userUid: string) => `${BASE_URL}/api/persons/id/${userUid}`,
     USER_INFO_UID_EMAIL: (userUid: string) => `${BASE_URL}/api/persons/id/${userUid}/email/`,
     APPROVE_NEW_STAFF_USER: (staffUid: string) => `${BASE_URL}/api/approve/staffs/${staffUid}`,

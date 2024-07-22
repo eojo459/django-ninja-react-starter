@@ -120,7 +120,7 @@ export default function PlansPricing(props: IPlansPricing) {
         }
         else {
             // else redirect to create account with query param for basic plan
-            navigate('/register?plan=basic&isOwner=true');
+            navigate('/register?plan=basic&isUser=true');
             setTimeout(() => {
                 notifications.show({
                     color: 'teal',
@@ -232,7 +232,7 @@ export default function PlansPricing(props: IPlansPricing) {
         }
         else {
             // else redirect to create account with query param for pro plan
-            navigate('/register?plan=pro&isOwner=true');
+            navigate('/register?plan=pro&isUser=true');
             setTimeout(() => {
                 notifications.show({
                     color: 'teal',

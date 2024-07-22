@@ -1158,7 +1158,7 @@ export default function ProfileSettings() {
                                                     button={true} 
                                                     title="Current plan" 
                                                     description={planCancelledTitleCard} 
-                                                    subHeading={"$" + user?.payment.txn_amount + " / month"}
+                                                    subHeading={"$" + user?.payment?.txn_amount + " / month"}
                                                     backgroundColor="#374842"
                                                     buttonText="Change plan"
                                                     buttonColor="#1F282A"

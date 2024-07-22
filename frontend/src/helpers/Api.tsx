@@ -30,15 +30,12 @@ export async function getUserByUid(uid: string, authTokens: any) {
 }
 
 // POST new user
-export async function PostNewUser(data: any, authTokens: any) {
+export async function PostNewUser(data: any) {
     try {
         const response = await axios({
 			method: "POST",
 			url: API_ROUTES.USERS,
             data: data,
-			headers: {
-				'X-JWT': authTokens
-			},
 		})
         return response.status;
     } catch (error) {
@@ -76,6 +73,35 @@ export async function DeleteUserByUid(uid: string, authTokens: any) {
         return response.status;
     } catch (error) {
         console.error('Error deleting user:', error);
+    }
+}
+
+// LOGIN/SIGN IN the user
+export async function LoginUser(data: any) {
+    try {
+        const response = await axios({
+			method: "POST",
+			url: API_ROUTES.AUTH_LOGIN,
+            data: data,
+		})
+        return response.status;
+    } catch (error) {
+        console.error('Error logging in user:', error);
+    }
+}
+
+// GET auth user email by username
+export async function GetAuthUserEmailByUsername(username: string) {
+    try {
+        const response = await axios({
+			method: "GET",
+			url: API_ROUTES.USERS_USERNAME_EMAIL(username),
+		})
+        if (response.status === 200) {
+            return response.data['email'];
+        }
+    } catch (error) {
+        console.error('Error fetching data:', error);
     }
 }
 
@@ -178,12 +204,12 @@ export async function PostApproveStaffUser(staffUid: string, data: any, authToke
 export async function CheckUsers(queryParam: any) {
     try {
         const response = await axios({
-			method: "POST",
-			url: API_ROUTES.USERS,
+			method: "GET",
+			url: API_ROUTES.AUTH_CHECK,
             params: queryParam,
 		})
         if (response.status === 200) {
-            return response.data;
+            return response.data['status'];
         }
     } catch (error) {
         console.error('Error saving data:', error);
@@ -474,22 +500,6 @@ export async function DeleteCookies(userUid: string, data: any, authTokens: any)
         return response.status;
     } catch (error) {
         console.error('Error saving data:', error);
-    }
-}
-
-// GET auth user email by username
-export async function GetAuthUserEmailByUsername(username: string, data: any) {
-    try {
-        const response = await axios({
-			method: "POST",
-            data: data,
-			url: API_ROUTES.USERS_USERNAME_EMAIL(username),
-		})
-        if (response.status === 200) {
-            return response;
-        }
-    } catch (error) {
-        console.error('Error fetching data:', error);
     }
 }
 
