@@ -7,7 +7,7 @@ from decouple import config
 from ninja.security import HttpBearer, APIKeyHeader
 
 # supabase setup
-supabase: Client = create_client(config('SUPABASE_URL'), supabaseKey)
+supabase: Client = create_client(config('SUPABASE_URL'), config('SUPABASE_KEY'))
 
 # authentication middleware to validate access tokens
 class SupabaseTokenAuthentication(APIKeyHeader):

@@ -15,10 +15,10 @@ import { isObjectEmpty } from '../helpers/Helpers';
 
 
 // Create a single supabase client for interacting with your database
-const supabaseKey = process.env.SUPABASE_KEY ?? "";
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY ?? "";
-export const supabase = createClient('https://cmkoomcgbmueihzpvtck.supabase.co', supabaseKey)
-const supabase_admin = createClient('https://cmkoomcgbmueihzpvtck.supabase.co', supabaseServiceKey, {
+const supabaseKey = process.env.REACT_APP_SUPABASE_KEY;
+const supabaseServiceKey = process.env.REACT_APP_SUPABASE_SERVICE_KEY;
+export const supabase = createClient('https://cmkoomcgbmueihzpvtck.supabase.co', supabaseKey!)
+const supabase_admin = createClient('https://cmkoomcgbmueihzpvtck.supabase.co', supabaseServiceKey!, {
     auth: {
       autoRefreshToken: false,
       persistSession: false

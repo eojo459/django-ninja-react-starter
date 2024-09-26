@@ -85,7 +85,7 @@ const hasJsxRuntime = (() => {
   }
 })();
 
-const dotenv = require('dotenv').config({ path: __dirname + '/.env' });
+//const dotenv = require('dotenv').config({ path: __dirname + '/.env' });
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
@@ -756,6 +756,9 @@ module.exports = function (webpackEnv) {
             },
           },
         }),
+      new webpack.ProvidePlugin({
+        process: 'process/browser.js',
+      }),
     ].filter(Boolean),
     // Turn off performance processing because we utilize
     // our own hints via the FileSizeReporter
