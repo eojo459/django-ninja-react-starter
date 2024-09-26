@@ -1,2 +1,4 @@
 ninjaApi/.env
 ninjaApi/venv/*
+frontend/.env
+replacements.txt
